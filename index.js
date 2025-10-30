@@ -1,20 +1,30 @@
-
 let convertBtn = document.getElementById("convert-btn")
 let inputEl = document.getElementById("input")
 let lengthEl = document.getElementById("length-el")
 let volumeEl = document.getElementById("volume-el")
 let massEl = document.getElementById("mass-el")
 
-const meterToFeet =  3.281
-const feetToMeter = 0.3048
-const literToGallon =  0.264
-const gallonToLiter = 3.78541178
-const kiloToPound =  2.204
-const poundToKilo = 0.45359237
+const conversions = {
+    length: { from: 1, to: 3.281, leftUnit: "meters", rightUnit: "feet" },
+    volume: { from: 1, to: 0.264, leftUnit: "liters", rightUnit: "gallons" },
+    mass:   { from: 1, to: 2.204, leftUnit: "kilos",  rightUnit: "pounds" }
+}
 
 convertBtn.addEventListener("click", function() {
     let baseValue = inputEl.value
-    lengthEl.textContent = `${baseValue} meter = ${(baseValue * meterToFeet).toFixed(3)} feet | ${baseValue} feet = ${(baseValue * feetToMeter).toFixed(3)}` 
-    volumeEl.textContent = `${baseValue} liters = ${(baseValue * literToGallon).toFixed(3)} liters | ${baseValue} gallons = ${(baseValue * gallonToLiter).toFixed(3)}`
-    massEl.textContent = `${baseValue} kilo = ${(baseValue * kiloToPound).toFixed(3)} pounds | ${baseValue} pounds = ${(baseValue * poundToKilo).toFixed(3)}`
+    
+    lengthEl.textContent = `${baseValue} ${conversions.length.leftUnit} = ${(baseValue * conversions.length.to).toFixed(3)} ${conversions.length.rightUnit} | ${baseValue} ${conversions.length.rightUnit} = ${(baseValue / conversions.length.to).toFixed(3)} ${conversions.length.leftUnit}`
+    
+    volumeEl.textContent = `${baseValue} ${conversions.volume.leftUnit} = ${(baseValue * conversions.volume.to).toFixed(3)} ${conversions.volume.rightUnit} | ${baseValue} ${conversions.volume.rightUnit} = ${(baseValue / conversions.volume.to).toFixed(3)} ${conversions.volume.leftUnit}`
+    
+    massEl.textContent = `${baseValue} ${conversions.mass.leftUnit} = ${(baseValue * conversions.mass.to).toFixed(3)} ${conversions.mass.rightUnit} | ${baseValue} ${conversions.mass.rightUnit} = ${(baseValue / conversions.mass.to).toFixed(3)} ${conversions.mass.leftUnit}`
 })
+
+inputEl.addEventListener("input", function() {
+    if (this.value === "") return;
+    if (isNaN(this.value) || this.value < 0 || Number(this.value) > 1000) {
+        alert("Please enter a positive number less than or equal to 1000!");
+        this.value = "";
+    }
+})
+
